@@ -24,7 +24,7 @@ for(int j = 1; j <= maxNumDigits; j++) {
     int[] partiallySorted = new int[array.length];
     int numAt = 0;
     search:
-    for(int m = 0; m < array.length; m++) {
+    for(int m = 0; m < 10; m++) {
         while(!buckets.get(m).isEmpty()) {
             partiallySorted[numAt] = buckets.get(m).pollFirst();
             numAt++;
