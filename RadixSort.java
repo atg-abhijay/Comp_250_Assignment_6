@@ -1,18 +1,42 @@
 import java.util.*;
 public class RadixSort {
     public static void main(String[] args) {
-        int[] array = new int[8];
+        int[] utilities = new int[8];
+        int[] costs = new int[utilities.length];
         //int[] array = {7,2,9,8};
-        for(int i = 0; i < array.length; i++) {
-            array[i] = (int) (Math.random() * 50);
-            System.out.print(array[i] + " ");
+        for(int i = 0; i < utilities.length; i++) {
+            utilities[i] = (int) (Math.random() * 20);
+            System.out.print(utilities[i] + " ");
+        }
+
+        System.out.println();
+
+        for(int i = 0; i < costs.length; i++) {
+            costs[i] = (int) (Math.random() * 20);
+            System.out.print(costs[i] + " ");
         }
 
         System.out.println("\n");
-        int[] answer = radixSort(array);
+        int[] answer = radixSort(utilities);
         for(int k = 0; k < answer.length; k++) {
             System.out.print(answer[k] + " ");
         }
+
+        System.out.println("\nGreedyAlgo");
+        int[][] utilitiesAndCosts = radixSortForGreedyAlgo(utilities, costs);
+
+        for(int i = 0; i < utilities.length; i++) {
+            //utilities[i] = (int) (Math.random() * 20);
+            System.out.print(utilitiesAndCosts[0][i] + " ");
+        }
+
+        System.out.println();
+
+        for(int i = 0; i < costs.length; i++) {
+            //costs[i] = (int) (Math.random() * 20);
+            System.out.print(utilitiesAndCosts[1][i] + " ");
+        }
+
     }
 
     public static int[] radixSort(int[] array) {
@@ -62,5 +86,69 @@ public class RadixSort {
         }
 
         return copied;                                             // return                                = 1
+    }
+
+    public static int[][] radixSortForGreedyAlgo(int[] utilities, int[] costs) {
+        int max = 0;                                            
+        int[] copyForUtilities = new int[utilities.length];
+        int[] copyForCosts = new int[costs.length];              
+        for(int i = 0; i < copyForUtilities.length; i++) {                 
+            int num = utilities[i];                                     
+            if(max < num) {                                         
+                max = num;                                          
+            }
+            copyForUtilities[i] = num;
+            copyForCosts[i] = costs[i];                                      
+        }                                                       
+
+        //System.out.println("Max: " + max);
+        int maxNumDigits = (int) Math.log10(max) + 1;           
+        //System.out.println("Max number of digits: " + maxNumDigits);
+        LinkedList<LinkedList<Integer>> bucketsForUtilities = new LinkedList<LinkedList<Integer>>();
+        LinkedList<LinkedList<Integer>> bucketsForCosts = new LinkedList<LinkedList<Integer>>(); 
+        for(int p = 0; p < 10; p++) {                           
+            bucketsForUtilities.add(new LinkedList<Integer>());
+            bucketsForCosts.add(new LinkedList<Integer>());
+        }
+        
+
+        for(int j = 1; j <= maxNumDigits; j++) {                
+            for(int k = 0; k < utilities.length; k++) {                 
+                int number = copyForUtilities[k];                                                  
+                //System.out.println("Number: " + number);
+                int digit = (int) ((number % Math.pow(10, j)) / Math.pow(10,j-1));      
+                //System.out.println("Digit: " + digit);
+                bucketsForUtilities.get(digit).add(number);
+                bucketsForCosts.get(digit).add(copyForCosts[k]);                                         
+            }                                                                      
+
+            int[] partiallySortedU = new int[copyForUtilities.length];
+            int[] partiallySortedC = new int[copyForCosts.length];
+            int numAt = 0;                                          
+
+            search:
+            for(int m = 0; m < 10; m++) {                           
+                while(!bucketsForUtilities.get(m).isEmpty()) {                                  
+                    partiallySortedU[numAt] = bucketsForUtilities.get(m).pollFirst();   
+                    partiallySortedC[numAt] = bucketsForCosts.get(m).pollFirst();            
+                    //System.out.println("Added: " + partiallySorted[numAt]);
+                    numAt++;                                                            
+                }
+                if(numAt == copyForUtilities.length) {                                         
+                    break search;                                                       
+                }
+            }
+            copyForUtilities = partiallySortedU;
+            copyForCosts = partiallySortedC;
+        }
+
+        //utilities = copyForUtilities;
+        //costs = copyForCosts;
+
+        int[][] utilitiesAndCosts = new int[2][];
+        utilitiesAndCosts[0] = copyForUtilities;
+        utilitiesAndCosts[1] = copyForCosts;
+
+        return utilitiesAndCosts;
     }
 }
