@@ -4,28 +4,34 @@ public class RadixSort {
         int[] utilities = new int[8];
         int[] costs = new int[utilities.length];
         //int[] array = {7,2,9,8};
-        for(int i = 0; i < utilities.length; i++) {
+        printArray(utilities, true);
+        printArray(costs, true);
+        /* for(int i = 0; i < utilities.length; i++) {
             utilities[i] = (int) (Math.random() * 20);
             System.out.print(utilities[i] + " ");
-        }
+        } */
 
-        System.out.println();
+        //System.out.println();
 
-        for(int i = 0; i < costs.length; i++) {
+        /* for(int i = 0; i < costs.length; i++) {
             costs[i] = (int) (Math.random() * 20);
             System.out.print(costs[i] + " ");
-        }
+        } */
 
-        System.out.println("\n");
+        //System.out.println("\n");
         int[] answer = radixSort(utilities);
-        for(int k = 0; k < answer.length; k++) {
+        printArray(answer, false);
+        /* for(int k = 0; k < answer.length; k++) {
             System.out.print(answer[k] + " ");
-        }
+        } */
 
         System.out.println("\nGreedyAlgo");
-        int[][] utilitiesAndCosts = radixSortForGreedyAlgo(utilities, costs);
+        int[][] utilitiesAndCosts = sortForGreedyAlgo(utilities, costs);
 
-        for(int i = 0; i < utilities.length; i++) {
+        printArray(utilitiesAndCosts[0], false);
+        printArray(utilitiesAndCosts[1], false);
+
+        /* for(int i = 0; i < utilities.length; i++) {
             //utilities[i] = (int) (Math.random() * 20);
             System.out.print(utilitiesAndCosts[0][i] + " ");
         }
@@ -35,7 +41,7 @@ public class RadixSort {
         for(int i = 0; i < costs.length; i++) {
             //costs[i] = (int) (Math.random() * 20);
             System.out.print(utilitiesAndCosts[1][i] + " ");
-        }
+        } */
 
     }
 
@@ -88,7 +94,7 @@ public class RadixSort {
         return copied;                                             // return                                = 1
     }
 
-    public static int[][] radixSortForGreedyAlgo(int[] utilities, int[] costs) {
+    public static int[][] sortForGreedyAlgo(int[] utilities, int[] costs) {
         int max = 0;                                            
         int[] copyForUtilities = new int[utilities.length];
         int[] copyForCosts = new int[costs.length];              
@@ -101,9 +107,7 @@ public class RadixSort {
             copyForCosts[i] = costs[i];                                      
         }                                                       
 
-        //System.out.println("Max: " + max);
         int maxNumDigits = (int) Math.log10(max) + 1;           
-        //System.out.println("Max number of digits: " + maxNumDigits);
         LinkedList<LinkedList<Integer>> bucketsForUtilities = new LinkedList<LinkedList<Integer>>();
         LinkedList<LinkedList<Integer>> bucketsForCosts = new LinkedList<LinkedList<Integer>>(); 
         for(int p = 0; p < 10; p++) {                           
@@ -115,9 +119,7 @@ public class RadixSort {
         for(int j = 1; j <= maxNumDigits; j++) {                
             for(int k = 0; k < utilities.length; k++) {                 
                 int number = copyForUtilities[k];                                                  
-                //System.out.println("Number: " + number);
-                int digit = (int) ((number % Math.pow(10, j)) / Math.pow(10,j-1));      
-                //System.out.println("Digit: " + digit);
+                int digit = (int) ((number % Math.pow(10, j)) / Math.pow(10,j-1));
                 bucketsForUtilities.get(digit).add(number);
                 bucketsForCosts.get(digit).add(copyForCosts[k]);                                         
             }                                                                      
@@ -130,8 +132,7 @@ public class RadixSort {
             for(int m = 0; m < 10; m++) {                           
                 while(!bucketsForUtilities.get(m).isEmpty()) {                                  
                     partiallySortedU[numAt] = bucketsForUtilities.get(m).pollFirst();   
-                    partiallySortedC[numAt] = bucketsForCosts.get(m).pollFirst();            
-                    //System.out.println("Added: " + partiallySorted[numAt]);
+                    partiallySortedC[numAt] = bucketsForCosts.get(m).pollFirst();
                     numAt++;                                                            
                 }
                 if(numAt == copyForUtilities.length) {                                         
@@ -142,13 +143,28 @@ public class RadixSort {
             copyForCosts = partiallySortedC;
         }
 
-        //utilities = copyForUtilities;
-        //costs = copyForCosts;
-
         int[][] utilitiesAndCosts = new int[2][];
         utilitiesAndCosts[0] = copyForUtilities;
         utilitiesAndCosts[1] = copyForCosts;
 
         return utilitiesAndCosts;
+    }
+
+    /* public static int[] greedyChoice(int[] c, int[] u, int n) {
+        int[][] uAndC = sortForGreedyAlgo(u, c);
+        u = uAndC[0];
+        c = uAndC[1];
+
+
+    } */
+
+    public static void printArray(int[] array, boolean assign) {
+        for(int i = 0; i < array.length; i++) {
+            if(assign) {
+                array[i] = (int) (Math.random()*20);
+            }
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
     }
 }
