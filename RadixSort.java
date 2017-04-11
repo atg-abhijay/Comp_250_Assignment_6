@@ -15,12 +15,19 @@ public class RadixSort {
         printArray(utilitiesAndCosts[0], false);
         printArray(utilitiesAndCosts[1], false); */
 
-        Integer[] costs = {2,6,8,10};
-        Integer[] util = {1,5,8,9};
-        Integer[] objects = {0,1,2,3};
-        Integer[] costsPerUtil = new Integer[costs.length];
-        int n = 21;
-        for(int i = 0; i < costsPerUtil.length; i++) {
+        int[] costs = {2,6,8,10};
+        int[] util = {1,5,8,9};
+        //Integer[] costsPerUtil = new Integer[costs.length];
+        int n = 26;
+        int[] quantities = greedyChoice(costs, util, n);
+        Integer[] q = new Integer[quantities.length];
+        for(int i = 0; i < quantities.length; i++) {
+            q[i] = Integer.valueOf(quantities[i]);
+        }
+
+        printArray(q, false);
+
+        /* for(int i = 0; i < costsPerUtil.length; i++) {
             costsPerUtil[i] = (Integer) ((int)((costs[i] * 100.0)/util[i]));
         }
         //int[] q = greedyChoice(costs, util, n);
@@ -52,8 +59,8 @@ public class RadixSort {
         Integer[][] answer = sort(details);
         for(int j = 0; j < answer.length; j++) {
             printArray(answer[j], false);
-        }
-        //sort2(details);
+        } */
+        //sort2(details); 
         
     }
 
@@ -163,18 +170,46 @@ public class RadixSort {
     }
 
     public static int[] greedyChoice(int[] c, int[] u, int n) {
-        /* int[][] uAndC = sortForGreedyAlgo(u, c);
-        u = uAndC[0];
-        c = uAndC[1]; */
+        Integer[] costs = new Integer[c.length];
+        Integer[] util = new Integer[u.length];
         int[] q = new int[c.length];
-        //double[] costPerUtility = new double[u.length];
-        double[][] details = new double[c.length][2];
-
-        for(int i = 0; i < details.length; i++) {
-            double cost = (double) c[i];
-            details[i][0] = cost;
-            details[i][1] = cost/u[i];
+        Integer[][] details = new Integer[c.length][4];
+        Integer[] costsPerUtil = new Integer[c.length];
+        for(int i = 0; i < costsPerUtil.length; i++) {
+            costs[i] = Integer.valueOf(c[i]);
+            util[i] = Integer.valueOf(u[i]);
+            costsPerUtil[i] = (Integer) ((int)((costs[i] * 100.0)/util[i]));
         }
+
+        for(int j = 0; j < details[0].length; j++) {
+            for(int i = 0; i < details.length; i++) {
+                if(j == 0) {
+                    details[i][j] = i;
+                }
+                if(j == 1) {
+                    details[i][j] = costs[i];
+                }
+                if(j == 2) {
+                    details[i][j] = util[i]; 
+                }
+                if(j == 3) {
+                    details[i][j] = costsPerUtil[i];
+                }
+            }
+        }
+
+        for(int j = 0; j < details.length; j++) {
+            printArray(details[j], false);
+        }
+
+        System.out.println();
+        Integer[][] answer = sort(details);
+
+        for(int j = 0; j < answer.length; j++) {
+            printArray(answer[j], false);
+        }
+
+
 
         /* sortForGreedyAlgo sorts the costPerUtility
             array in ascending array and changes u and c
@@ -199,7 +234,7 @@ public class RadixSort {
 
         for(int j = 0; j < q.length; j++) {
             int quantity = 0;
-            double cost = details[j][0];
+            int cost = answer[j][1];
             while(cost * quantity <= n) {
                 quantity++;
             }
@@ -209,7 +244,8 @@ public class RadixSort {
             }
 
             n = n - (int) (cost * quantity);
-            q[j] = quantity;
+            int index = answer[j][0];
+            q[index] = quantity;
         }
         return q;
 
