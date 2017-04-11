@@ -26,16 +26,34 @@ public class RadixSort {
         //int[] q = greedyChoice(costs, util, n);
         //printArray(q, false);
 
-        Integer[][] details = {objects, costsPerUtil};
-        /* for(int j = 0; j < details.length; j++) {
+        Integer[][] details = new Integer[4][4];
+        for(int j = 0; j < details[0].length; j++) {
+            for(int i = 0; i < details.length; i++) {
+                if(j == 0) {
+                    details[i][j] = objects[i];
+                }
+                if(j == 1) {
+                    details[i][j] = costs[i];
+                }
+                if(j == 2) {
+                    details[i][j] = util[i]; 
+                }
+                if(j == 3) {
+                    details[i][j] = costsPerUtil[i];
+                }
+            }
+        }
+
+
+        for(int j = 0; j < details.length; j++) {
             printArray(details[j], false);
         }
         System.out.println();
         Integer[][] answer = sort(details);
         for(int j = 0; j < answer.length; j++) {
             printArray(answer[j], false);
-        } */
-        sort2(details);
+        }
+        //sort2(details);
         
     }
 
@@ -201,6 +219,7 @@ public class RadixSort {
         for(int i = 0; i < array.length; i++) {
             if(assign) {
                 array[i] = (Integer) ((int) (Math.random()*20));
+                //array[i] = (int) (Math.random()*20);
             }
             System.out.print(array[i] + " ");
         }
@@ -210,16 +229,20 @@ public class RadixSort {
 
     public static Integer[][] sort(Integer[][] details) {
         int max = 0;
-        Integer[] costPerUtil = new Integer[details[0].length];
+        Integer[] costPerUtil = new Integer[details.length];
         Integer[][] arrays = new Integer[details.length][details[0].length];          
         for(int i = 0; i < costPerUtil.length; i++) {                 
-            int num = details[details.length - 1][i];                                     
+            int num = details[i][details[0].length - 1];                                     
             if(max < num) {                                         
                 max = num;                                   
             }
-            costPerUtil[i] = num;
-            arrays[i] = details[i];                       
-        }                                                       
+            costPerUtil[i] = num;                     
+        }
+
+        for(int j = 0; j < details.length; j++) {
+            arrays[j] = details[j];
+            //System.out.print(arrays[j] + " ");
+        }                                        
 
         int maxNumDigits = (int) Math.log10(max) + 1;        
         LinkedList<LinkedList<Integer>> bucketsForCPerU = new LinkedList<LinkedList<Integer>>();
