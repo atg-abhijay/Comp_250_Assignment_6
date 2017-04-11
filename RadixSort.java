@@ -18,13 +18,14 @@ public class RadixSort {
         int[] costs = {2,6,8,10};
         int[] util = {1,5,8,9};
         //Integer[] costsPerUtil = new Integer[costs.length];
-        int n = 26;
+        int n = Integer.parseInt(args[0]);
         int[] quantities = greedyChoice(costs, util, n);
         Integer[] q = new Integer[quantities.length];
         for(int i = 0; i < quantities.length; i++) {
             q[i] = Integer.valueOf(quantities[i]);
         }
 
+        System.out.println();
         printArray(q, false);
 
         /* for(int i = 0; i < costsPerUtil.length; i++) {
@@ -209,28 +210,10 @@ public class RadixSort {
             printArray(answer[j], false);
         }
 
-
-
-        /* sortForGreedyAlgo sorts the costPerUtility
-            array in ascending array and changes u and c
-            in the way described below:
-
-            suppose costPerUtility has elements P[0...k-1]
-            and the array changed like:
-
-            P0, P1, P2, P3, P4, P5 ------> P3, P2, P1, P5, P4 (ascending order)
-            then the method changes u and c like:
-
-            U0, U1, U2, U3, U4, U5 ------> U3, U2, U1, U5, U4
-            C0, C1, C2, C3, C4, C5 ------> C3, C2, C1, C5, C4
-            (not necessarily in ascending order)
-
-            so that the elements in all the three arrays
-            CORRESPOND to each other */
-        /* double[][] sorted = sortForGreedyAlgo(costPerUtility, u, c);
-        sortedCostPerUtil = sorted[0];
-        corresUtil = sorted[1];
-        corresCost = sorted[2]; */
+        /* the method 'sort' sorts the 2D array 'details' based on
+            its last column which is costPerUtil. all the other
+            columns also get sorted in such a way so that they
+            match the corresponding entries of the last column */
 
         for(int j = 0; j < q.length; j++) {
             int quantity = 0;
@@ -277,7 +260,6 @@ public class RadixSort {
 
         for(int j = 0; j < details.length; j++) {
             arrays[j] = details[j];
-            //System.out.print(arrays[j] + " ");
         }                                        
 
         int maxNumDigits = (int) Math.log10(max) + 1;        
