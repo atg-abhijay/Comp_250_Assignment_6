@@ -1,48 +1,42 @@
 import java.util.*;
 public class RadixSort {
     public static void main(String[] args) {
-        int[] utilities = new int[8];
+        /* int[] utilities = new int[8];
         int[] costs = new int[utilities.length];
-        //int[] array = {7,2,9,8};
+
         printArray(utilities, true);
         printArray(costs, true);
-        /* for(int i = 0; i < utilities.length; i++) {
-            utilities[i] = (int) (Math.random() * 20);
-            System.out.print(utilities[i] + " ");
-        } */
 
-        //System.out.println();
-
-        /* for(int i = 0; i < costs.length; i++) {
-            costs[i] = (int) (Math.random() * 20);
-            System.out.print(costs[i] + " ");
-        } */
-
-        //System.out.println("\n");
         int[] answer = radixSort(utilities);
         printArray(answer, false);
-        /* for(int k = 0; k < answer.length; k++) {
-            System.out.print(answer[k] + " ");
-        } */
 
         System.out.println("\nGreedyAlgo");
         int[][] utilitiesAndCosts = sortForGreedyAlgo(utilities, costs);
-
         printArray(utilitiesAndCosts[0], false);
-        printArray(utilitiesAndCosts[1], false);
+        printArray(utilitiesAndCosts[1], false); */
 
-        /* for(int i = 0; i < utilities.length; i++) {
-            //utilities[i] = (int) (Math.random() * 20);
-            System.out.print(utilitiesAndCosts[0][i] + " ");
+        Integer[] costs = {2,6,8,10};
+        Integer[] util = {1,5,8,9};
+        Integer[] objects = {0,1,2,3};
+        Integer[] costsPerUtil = new Integer[costs.length];
+        int n = 21;
+        for(int i = 0; i < costsPerUtil.length; i++) {
+            costsPerUtil[i] = (Integer) ((int)((costs[i] * 100.0)/util[i]));
         }
+        //int[] q = greedyChoice(costs, util, n);
+        //printArray(q, false);
 
+        Integer[][] details = {objects, costsPerUtil};
+        /* for(int j = 0; j < details.length; j++) {
+            printArray(details[j], false);
+        }
         System.out.println();
-
-        for(int i = 0; i < costs.length; i++) {
-            //costs[i] = (int) (Math.random() * 20);
-            System.out.print(utilitiesAndCosts[1][i] + " ");
+        Integer[][] answer = sort(details);
+        for(int j = 0; j < answer.length; j++) {
+            printArray(answer[j], false);
         } */
-
+        sort2(details);
+        
     }
 
     public static int[] radixSort(int[] array) {
@@ -95,7 +89,7 @@ public class RadixSort {
     }
 
     public static int[][] sortForGreedyAlgo(int[] utilities, int[] costs) {
-        int max = 0;                                            
+        int max = 0;                         
         int[] copyForUtilities = new int[utilities.length];
         int[] copyForCosts = new int[costs.length];              
         for(int i = 0; i < copyForUtilities.length; i++) {                 
@@ -150,21 +144,149 @@ public class RadixSort {
         return utilitiesAndCosts;
     }
 
-    /* public static int[] greedyChoice(int[] c, int[] u, int n) {
-        int[][] uAndC = sortForGreedyAlgo(u, c);
+    public static int[] greedyChoice(int[] c, int[] u, int n) {
+        /* int[][] uAndC = sortForGreedyAlgo(u, c);
         u = uAndC[0];
-        c = uAndC[1];
+        c = uAndC[1]; */
+        int[] q = new int[c.length];
+        //double[] costPerUtility = new double[u.length];
+        double[][] details = new double[c.length][2];
 
+        for(int i = 0; i < details.length; i++) {
+            double cost = (double) c[i];
+            details[i][0] = cost;
+            details[i][1] = cost/u[i];
+        }
 
-    } */
+        /* sortForGreedyAlgo sorts the costPerUtility
+            array in ascending array and changes u and c
+            in the way described below:
 
-    public static void printArray(int[] array, boolean assign) {
+            suppose costPerUtility has elements P[0...k-1]
+            and the array changed like:
+
+            P0, P1, P2, P3, P4, P5 ------> P3, P2, P1, P5, P4 (ascending order)
+            then the method changes u and c like:
+
+            U0, U1, U2, U3, U4, U5 ------> U3, U2, U1, U5, U4
+            C0, C1, C2, C3, C4, C5 ------> C3, C2, C1, C5, C4
+            (not necessarily in ascending order)
+
+            so that the elements in all the three arrays
+            CORRESPOND to each other */
+        /* double[][] sorted = sortForGreedyAlgo(costPerUtility, u, c);
+        sortedCostPerUtil = sorted[0];
+        corresUtil = sorted[1];
+        corresCost = sorted[2]; */
+
+        for(int j = 0; j < q.length; j++) {
+            int quantity = 0;
+            double cost = details[j][0];
+            while(cost * quantity <= n) {
+                quantity++;
+            }
+
+            if (quantity != 0) {
+                quantity -= 1;
+            }
+
+            n = n - (int) (cost * quantity);
+            q[j] = quantity;
+        }
+        return q;
+
+    }
+
+    public static void printArray(Integer[] array, boolean assign) {
         for(int i = 0; i < array.length; i++) {
             if(assign) {
-                array[i] = (int) (Math.random()*20);
+                array[i] = (Integer) ((int) (Math.random()*20));
             }
             System.out.print(array[i] + " ");
         }
         System.out.println();
     }
+
+
+    public static Integer[][] sort(Integer[][] details) {
+        int max = 0;
+        Integer[] costPerUtil = new Integer[details[0].length];
+        Integer[][] arrays = new Integer[details.length][details[0].length];          
+        for(int i = 0; i < costPerUtil.length; i++) {                 
+            int num = details[details.length - 1][i];                                     
+            if(max < num) {                                         
+                max = num;                                   
+            }
+            costPerUtil[i] = num;
+            arrays[i] = details[i];                       
+        }                                                       
+
+        int maxNumDigits = (int) Math.log10(max) + 1;        
+        LinkedList<LinkedList<Integer>> bucketsForCPerU = new LinkedList<LinkedList<Integer>>();
+        LinkedList<LinkedList<Integer[]>> bucketsForArray = new LinkedList<LinkedList<Integer[]>>();
+        for(int p = 0; p < 10; p++) {                           
+            bucketsForCPerU.add(new LinkedList<Integer>());
+            bucketsForArray.add(new LinkedList<Integer[]>());
+        }
+        
+
+        for(int j = 1; j <= maxNumDigits; j++) {        
+            for(int k = 0; k < costPerUtil.length; k++) {                 
+                int number = costPerUtil[k];                                                  
+                int digit = (int) ((number % Math.pow(10, j)) / Math.pow(10,j-1));
+                bucketsForCPerU.get(digit).add(number);
+                bucketsForArray.get(digit).add(arrays[k]);                                        
+            }                                                                    
+
+            Integer[] partiallySorted = new Integer[costPerUtil.length];
+            Integer[][] parSorted = new Integer[details.length][details[0].length];
+            int numAt = 0;                                          
+
+            search:
+            for(int m = 0; m < 10; m++) {                           
+                while(!bucketsForCPerU.get(m).isEmpty()) {                                  
+                    partiallySorted[numAt] = bucketsForCPerU.get(m).pollFirst();   
+                    parSorted[numAt] = bucketsForArray.get(m).pollFirst();
+                    numAt++;                                                            
+                }
+                if(numAt == costPerUtil.length) {                                         
+                    break search;                                                       
+                }
+            }
+            costPerUtil = partiallySorted;
+            arrays = parSorted;
+        }
+
+        Integer[][] answer = arrays;
+
+        return answer;
+    }
+
+    public static void sort2(Integer[][] theArray) {   
+    //Integer[][] theArray = {{0,10},{1,9},{2,9},{3,9},{4,15},{5,10},{6,4},{7,8},{8,11},{9,12}};
+
+    dump(theArray);
+    Arrays.sort(theArray, new Comparator<Integer[]>()
+    {
+        @Override
+        public int compare(Integer[] int1, Integer[] int2) {
+            Integer numOfKeys1 = int1[int1.length];
+            Integer numOfKeys2 = int2[int2.length];
+            return numOfKeys1.compareTo(numOfKeys2);
+        }
+    });
+
+        System.out.println("====");
+        dump(theArray);     
+    }
+
+    public static void dump(Integer[][] array) {
+        for(int p = 0; p < array.length; p++) {
+            for(int q = 0; q < array[0].length; q++) {
+                System.out.println(array[p][q] + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }
