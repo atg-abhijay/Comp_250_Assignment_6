@@ -15,18 +15,18 @@ public class RadixSort {
         printArray(utilitiesAndCosts[0], false);
         printArray(utilitiesAndCosts[1], false); */
 
-        int[] costs = {3,8,5};
-        int[] util = {4,6,5};
+        int[] costs = {2,6,8,10};
+        int[] util = {1,5,8,9};
         //Integer[] costsPerUtil = new Integer[costs.length];
         int n = Integer.parseInt(args[0]);
-        /* int[] quantities = greedyChoice(costs, util, n);
+        int[] quantities = greedyChoice(costs, util, n);
         Integer[] q = new Integer[quantities.length];
         for(int i = 0; i < quantities.length; i++) {
             q[i] = Integer.valueOf(quantities[i]);
         }
 
         System.out.println();
-        printArray(q, false); */
+        printArray(q, false);
 
         int totalUtil = knapSack(costs, util, n);
         System.out.println("Total Utility: " + totalUtil);
@@ -79,8 +79,8 @@ public class RadixSort {
             }
             achievableUtil[i] = 0;
             for(int j = 0; j < possibleObjects.size(); j++) {
-                int indice = possibleObjects.get(j);
-                int possibleVal = util[indice] + achievableUtil[i - costs[indice]];
+                int index = possibleObjects.get(j);
+                int possibleVal = util[index] + achievableUtil[i - costs[index]];
                 if(achievableUtil[i] < possibleVal) {
                     achievableUtil[i] = possibleVal;
                 }
