@@ -15,19 +15,21 @@ public class RadixSort {
         printArray(utilitiesAndCosts[0], false);
         printArray(utilitiesAndCosts[1], false); */
 
-        int[] costs = {2,6,8,10};
-        int[] util = {1,5,8,9};
+        int[] costs = {3,8,5};
+        int[] util = {4,6,5};
         //Integer[] costsPerUtil = new Integer[costs.length];
         int n = Integer.parseInt(args[0]);
-        int[] quantities = greedyChoice(costs, util, n);
+        /* int[] quantities = greedyChoice(costs, util, n);
         Integer[] q = new Integer[quantities.length];
         for(int i = 0; i < quantities.length; i++) {
             q[i] = Integer.valueOf(quantities[i]);
         }
 
         System.out.println();
-        printArray(q, false);
+        printArray(q, false); */
 
+        int totalUtil = knapSack(costs, util, n);
+        System.out.println("Total Utility: " + totalUtil);
         /* for(int i = 0; i < costsPerUtil.length; i++) {
             costsPerUtil[i] = (Integer) ((int)((costs[i] * 100.0)/util[i]));
         }
@@ -63,6 +65,28 @@ public class RadixSort {
         } */
         //sort2(details); 
         
+    }
+
+    public static int knapSack(int[] costs, int[] util, int n) {
+        int[] achievableUtil = new int[n + 1];
+        achievableUtil[0] = 0;
+        for(int i = 1; i < achievableUtil.length; i++) {
+            LinkedList<Integer> possibleObjects = new LinkedList<Integer>();
+            for(int p = 0; p < costs.length; p++) {
+                if(i - costs[p] >= 0) {
+                    possibleObjects.add(p);
+                }
+            }
+            achievableUtil[i] = 0;
+            for(int j = 0; j < possibleObjects.size(); j++) {
+                int indice = possibleObjects.get(j);
+                int possibleVal = util[indice] + achievableUtil[i - costs[indice]];
+                if(achievableUtil[i] < possibleVal) {
+                    achievableUtil[i] = possibleVal;
+                }
+            }
+        }
+        return achievableUtil[n];
     }
 
     public static int[] radixSort(int[] array) {
